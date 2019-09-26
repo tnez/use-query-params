@@ -83,7 +83,5 @@ typings/
 .dynamodb/
 
 
-lib/
-esm/
 .DS_Store
 examples/**/package-lock.json
