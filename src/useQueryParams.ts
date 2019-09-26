@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   parse as parseQueryString,
+  parseUrl as parseQueryURL,
   encodeQueryParams,
   EncodedQueryWithNulls,
   DecodedValueMap,
@@ -21,10 +22,17 @@ export const useQueryParams = <QPCMap extends QueryParamConfigMap>(
   const { history, location } = React.useContext(QueryParamContext);
 
   // read in the raw query
-  const rawQuery = React.useMemo(
-    () => parseQueryString(location.search) || {},
-    [location.search]
-  );
+  const rawQuery = React.useMemo(() => {
+    let pathname = {};
+
+    if (typeof location === 'object' && typeof window !== undefined) {
+      pathname = parseQueryString(location.search);
+    } else if (typeof location === 'object') {
+      pathname = parseQueryURL(location.pathname);
+    }
+
+    return pathname;
+  }, []);
 
   // parse each parameter via useQueryParam
   // we reuse the logic to not recreate objects
